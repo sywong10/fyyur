@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{#        {{  areas }}#}
+    {% for area in shows %}
+        <li>{{ area.venue_id }}</li>
+        <li>{{ area.artist_id }}</li>
+        <li>{{ area.start_time }}</li>
+        <br>
+    {% endfor %}
+
+
+{#    {% for artist in artists %}#}
+{#        <li>{{ artist.name, artist.phone }}</li>#}
+{#    {% endfor %}#}
+
+</body>
+</html>
