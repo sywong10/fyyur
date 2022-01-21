@@ -7,10 +7,11 @@
 <body>
 
 {#        {{  areas }}#}
-    {% for area in shows %}
-        <li>{{ area.venue_id }}</li>
-        <li>{{ area.artist_id }}</li>
-        <li>{{ area.start_time }}</li>
+    {% for show in shows %}
+        <li>{{ show.show_id }}</li>
+        <li>{{ show.venue_id }}</li>
+        <li>{{ show.artist_id }}</li>
+        <li>{{ show.start_time }}</li>
         <br>
     {% endfor %}
 
