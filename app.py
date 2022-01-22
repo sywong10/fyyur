@@ -119,10 +119,8 @@ def venues():
       } for venue in venues if venue.city == place.city and venue.state == place.state]
     })
 
-
-  # return render_template('pages/venues.html', areas=data)
   return render_template('pages/venues.html', areas=locals)
-  # return render_template('pages/sally.html', areas=places)
+
 
 
 
@@ -208,6 +206,7 @@ def create_venue_submission():
     genres = form.genres.data,
     facebook_link = form.facebook_link.data,
     website_link = form.website_link.data,
+    image_link = form.image_link.data,
     seeking_talent = form.seeking_talent.data,
     seeking_description = form.seeking_description.data
   )
@@ -327,8 +326,21 @@ def edit_artist_submission(artist_id):
   # TODO: take values from the form submitted, and update existing
   # artist record with ID <artist_id> using the new attributes
 
+  form = ArtistForm(request.form)
+
+  try:
+    artist = Artist.query.first_or_404(artist_id)
+    form.populate_obj(artist)
+    db.session.commit()
+    flash('Artist {form.name.data} was updated.')
+  except ValueError as e:
+    db.session.rollback()
+    flash(f'an error occured during update of {form.name.data}' + e)
+  finally:
+    db.session.close()
 
   return redirect(url_for('show_artist', artist_id=artist_id))
+
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
@@ -340,17 +352,16 @@ def edit_venue(venue_id):
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
 
-  venue = Venue.query.first_or_404(venue_id)
-  form = VenueForm(obj=venue)
+  form = VenueForm(request.form)
 
   try:
-      venue=Venue.query.first_or_404(venue_id)
-      form.populate_obj(venue)
-      db.session.commit()
-      flash(f'Venue {form.name.data} was successfully edited!')
-  except VelueError as e:
-      db.session.rollback()
-      flash(f'An error occurred in {form.name.data}. Error: {str(e)}')
+    venue = Venue.query.first_or_404(venue_id)
+    form.populate_obj(venue)
+    db.session.commit()
+    flash(f'Venue {form.name.data} was updated.')
+  except ValueError as e:
+    db.session.rollback()
+    flash('An error occurred during update.' + e)
   finally:
     db.session.close()
 
