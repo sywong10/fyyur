@@ -27,6 +27,9 @@ migrate = Migrate(app, db)
 # Models.
 #----------------------------------------------------------------------------#
 
+# In this Data Model session, I had consulted with old Q/A with mentors, as well as my own questions to mentors
+#
+
 class Venue(db.Model):
     __tablename__ = 'venue'
 
@@ -110,6 +113,9 @@ def index():
 
 #  Venues
 #  ----------------------------------------------------------------
+#
+# this section starts from searching different students' Q/A with mentors, as well as my own questions for mentor.
+#
 
 @app.route('/venues')
 def venues():
@@ -133,13 +139,13 @@ def venues():
 
 
 
+# I learned the usage of ilike in query.filter from mentor and other students' Q/A
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
 
   search = request.form.get('search_term', '')
   venues = Venue.query.filter(Venue.name.ilike('%' + search + '%')).all()
-
   data = []
 
   for venue in venues:
@@ -152,6 +158,8 @@ def search_venues():
 
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
+
+# I learned the usage of join query also the datetime in Q/A of other students and mentors
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
@@ -204,6 +212,9 @@ def create_venue_form():
   form = VenueForm()
   return render_template('forms/new_venue.html', form=form)
 
+
+#  I learned the usage of request.form in Q/A between other students and mentors
+
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
 
@@ -230,9 +241,9 @@ def delete_venue(venue_id):
 
   try:
     venue = Venue.query.get(venue_id)
-    flash(venue)
     db.session.delete(venue)
     db.session.commit()
+    flash(venue + 'is added successfully.')
     return render_template('pages/home.html')
   except:
     db.session.rollback()
@@ -398,7 +409,6 @@ def create_artist_submission():
     flash('something went wrong, please try again')
   finally:
     db.session.close()
-
 
   return render_template('pages/home.html')
 
